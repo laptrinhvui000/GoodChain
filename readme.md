@@ -1,12 +1,12 @@
 # GoodChain
 
-`GoodChain` is a decentralized PoS blockchain. Written in `Node.js` from scratch.  
-This is a blockchain designed to be easy to understand and use.
+**GoodChain** is a decentralized **PoS** blockchain. Written in `Node.js` from scratch.  
+A blockchain designed to be easy to understand and use.
 
-If you are interested in learning how blockchains technically work, I hope this project will help you gain a deeper understanding of the concepts.  
+If you are interested in learning how blockchains technically work, this project will hopefully gains you a deeper understanding of the concepts.  
 <!-- You can read my [`step-by-step tutorial`](./) article, on how to write this blockchain. -->
 
-`GoodChain` main features are:
+## Features
 
 * Written in `Node.js` from scratch
 * Unique fair **Proof of Stake** algorithm
@@ -16,7 +16,7 @@ If you are interested in learning how blockchains technically work, I hope this 
 
 ## What is GoodChain?
 
-`GoodChain` is a simple implantation of **State base** and **Proof of Stake** blockchains. Anyone can be a miner or a validator, there are no pre-conditions.  
+**GoodChain** is a simple implantation of **State base** and **Proof of Stake** blockchains. Anyone can be a miner or a validator, there are no pre-conditions.  
 
 `GoodChain` has two native coins: `GTC` and `MCT`. `GTC` is what is used to pay for transaction fees and `MCT` is used to pay for validating a block. `MCT` can be earned by staking `GTC`.  
 
