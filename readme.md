@@ -53,6 +53,8 @@ Then the node will choose the chain with the **highest trust point**.
 npm install GoodChain
 ```
 
+## TODO
+<!-- 
 ## Usage
 
 ## GoodChain's architecture
@@ -71,4 +73,4 @@ Each block contains:
 
 ### Candidate block
 
-Each node has a `Candidate Blocks` list. Nodes add a Candidate block to the list only if it is has a valid signature.
+Each node has a `Candidate Blocks` list. Nodes add a Candidate block to the list only if it is has a valid signature. -->
