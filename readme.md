@@ -3,7 +3,7 @@
 **GoodChain** is a decentralized **PoS** blockchain. Written in `Node.js` from scratch.  
 A blockchain designed to be easy to understand and use.
 
-If you are interested in learning how blockchains technically work, this project will hopefully gains you a deeper understanding of the concepts.  
+If you are interested in learning how blockchains technically work, this project will hopefully give you a deeper understanding of the concepts.  
 <!-- You can read my [`step-by-step tutorial`](./) article, on how to write this blockchain. -->
 
 ## Features
