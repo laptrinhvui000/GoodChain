@@ -27,7 +27,7 @@ This approach gives better chance to the miners with fewer stakes to get a rewar
 
 I believe that the world's current wealth and resources distribution is not fair. So here at `GoodChain`, we introduced **fairer** distribution. Each time a validator mines a block, **20-25%** of the block reward plus the transactions fees goes to charities and other similar organizations' accounts.
 
-`GoodChain` keeps state and chain in two `JSON` files. To achieve this purpose, We use `lowdb`, A local `JSON` database. Which is **fast** and **easy to use**.
+**GoodChain**  keeps state and chain in two `JSON` files. To achieve this purpose, We use [lowdb](https://github.com/typicode/lowdb), A local `JSON` database. Which is **fast** and **easy to use**.
 
 ## Consensus Mechanism
 
