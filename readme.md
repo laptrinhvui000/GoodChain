@@ -27,7 +27,7 @@ This approach gives better chance to the miners with fewer stakes to get a rewar
 
 I believe that the world's current wealth and resources distribution is not fair. So here at `GoodChain`, we introduced **fairer** distribution. Each time a validator mines a block, **20-25%** of the block reward plus the transactions fees goes to charities and other similar organizations' accounts.
 
-**GoodChain**  keeps state and chain in two `JSON` files. To achieve this purpose, We use [lowdb](https://github.com/typicode/lowdb), A local `JSON` database. Which is **fast** and **easy to use**.
+**GoodChain**  keeps state and chain in two `JSON` files. To achieve this purpose, We use [lowdb](https://github.com/typicode/lowdb), A local `JSON` database, which is **fast** and **easy to use**.
 
 ## Consensus Mechanism
 
@@ -40,11 +40,13 @@ The network is kept safe by the fact that malicious nodes must constantly have *
 In `PoW` blockchains like Bitcoin, the **trust** (or correct) chain is the **longest chain**, which is determined by the chain's **total cumulative** proof of work difficulty. in other words, the chain that took the most energy to build.  
 In `PoS` blockchains, there is no CPU work. So another approach is needed to determine the **trust** chain.  
 
-in `GoodChain`, every node process the next block and add it to its **Block Candidate List**. Then they start getting other nodes **Block Candidate List** and will add them to their own **Block Candidate List**.  
+in `GoodChain`, every node, process the next block and add it to its **Block Candidate List**. Then they start getting other nodes **Block Candidate List** and will add them to their own **Block Candidate List**.  
 Then it will select the block candidate with the highest amount of `MCT`. and update his state and chain.  
 Then again each node wants to make sure that its chain is the correct chain. So it asks other nodes for their last block. if they are the same then everything is fine, else she needs to update or replace her chain.  
-For this `GoodChain` uses a simple reputation mechanism. The confused node will choose the chain from the nodes she **trusts** most.  This list can be inserted by the user manually or she can use the default algorithm to make the list.  
-The default algorithm reviews the confused node's chain, and calculates a trust point for each validator based on how many times a validator has mined a block.  
+
+For this, `GoodChain` uses a simple reputation mechanism. The confused node will choose the chain from the nodes she **trusts** most.  This list can be inserted by the validator manually or she can use the default algorithm to make the list.  
+
+The **default algorithm** reviews the confused node's chain, and calculates a trust point for each validator based on how many times a validator has mined a block.  
 Then the node will choose the chain with the **highest trust point**.
 
 ## Installation
