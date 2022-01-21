@@ -16,9 +16,10 @@ If you are interested in learning how blockchains technically work, this project
 
 ## What is GoodChain?
 
-**GoodChain** is a simple implantation of **State base** and **Proof of Stake** blockchains. Anyone can be a miner or a validator, there are no pre-conditions.  
+**GoodChain** is a simple implantation of **State Base**, **Proof of Stake** blockchains.  
+Anyone can be a miner or a validator, there are no pre-conditions.  
 
-`GoodChain` has two native coins: `GTC` and `MCT`. `GTC` is what is used to pay for transaction fees and `MCT` is used to pay for validating a block. `MCT` can be earned by staking `GTC`.  
+**GoodChain** has two native coins: `GTC` and `MCT`. `GTC` is what is used to pay for transaction fees and `MCT` is used to pay for validating a block. `MCT` can be earned by staking `GTC`.  
 
 Each time a validator **mines** a block, it receives some `GTC` as the block reward plus transactions fees.  
 Validators also burn some `MCT` as the mining fee. The amount of `MCT` burned is a percentage of the total amount of `MCT` that the validator has.  
