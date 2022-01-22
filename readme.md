@@ -67,7 +67,7 @@ It is pretty much just like any other blockchains. each block contains a `previo
 
 ### Blocks
 
-Straght forward, this is a example of a block:
+Straight forward, this is an example of a block:
 
 ```json
 {
