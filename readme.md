@@ -61,20 +61,48 @@ npm install GoodChain
 const chain = await new GoodChain();
 ```
 
-## GoodChain's architecture
+## Architecture
+
+It is pretty much just like any other blockchains. each block contains a `previous hash` which is the hash of the previous block. And a `hash` which is a `sha3-512` hash of the block object.
 
 ### Blocks
 
-Each block contains:
+Straght forward, this is a example of a block:
 
-* **transaction**
-* Hash of the current block
-* Hash of the previous block
+```json
+{
+ "index": 1,
+ "timestamp": 1642880361445,
+ "transactions": [],
+ "block_reward": 30,
+ "previous_hash": "0000000000000000000000000000000000000000",
+ "extra": "The intention of the donations is to help all the beings not only human kinds",
+ "validator_address": "base64 of a public key",
+ "state_hash": "sha3-512 hash of the state json file",
+ "validator_sign": "base64 result of block encryption using validator's private key, RSA algorithm",
+ "hash": "sha3-512 hash of the block object"
+}
+```
 
 ### Transactions
+
+Here is a example of a transaction:
+
+```json
+{
+ "index": 1,
+ "from": "base64 of a public key",
+ "to": "base64 of a public key",
+ "amount": 1,
+ "fee": 1,
+ "tickPrice": 0,
+ "sign": "base64 result of transaction encryption using sender's private key, RSA algorithm",
+ "hash": "sha3-512 hash of the transaction object"
+}
+```
 
 ## Glossary
 
 ### Candidate block
 
-Each node has a `Candidate Blocks` list. Nodes add a Candidate block to the list only if it is has a valid signature. -->
+Each node has a `Candidate Blocks` list. Nodes add a Candidate block to the list only if it is has a valid signature.
