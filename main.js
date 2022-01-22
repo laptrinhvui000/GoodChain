@@ -16,7 +16,7 @@ class GoodChain
 		self.chain = chain || []; // block chain
 		self.state = state || {}; // state of the blockchain
 		self.nodes = nodes || []; // list of nodes, validators or miners
-		self.transactions = []; // list of current transactions for the next candidate block
+		self.transactions_pool = []; // list of current transactions for the next candidate block
 		self.blockReward = 30; // Block reward for successfully mining a block in GCT
 		self.validationFee = 0.25; // The percentage of MCT that a validator will pay to validate a block
 		self.feesToCharity = 0.25; // The percentage of the block reward that will be sent to the charity
@@ -53,7 +53,7 @@ class GoodChain
 		const block = {
 			index, // block number
 			timestamp: Date.now(), // block timestamp
-			transactions: self.transactions,
+			transactions: self.transactions_pool,
 			block_reward: self.blockReward,
 			previous_hash: previous_hash || self.last_block().hash,
 			extra: "The intention of the donations is to help all the beings not only human kinds",
@@ -72,13 +72,14 @@ class GoodChain
 		const self = this;
 		try 
 		{
+			await self.pre_validate_block(block);
 			self.state_update(block);
 			block.state_hash ||= self.hash(self.state); // for when THIS validator mines a block
 			block.validator_sign ||= self.signBlock(block); // for when THIS validator mines a block
 			block.hash ||= self.hash(block); // for when THIS validator mines a block
-			await self.validate_block(block);
+			self.validate_block(block);
 			self.chain.push(block);
-			self.transactions = [];
+			self.transactions_pool = [];
 			await self.save(); // save the state and the chain
 			return block;
 		}
@@ -105,7 +106,6 @@ class GoodChain
 		for (let index = 0; index < block.transactions.length; index++) 
 		{
 			const element = block.transactions[index];
-			self.init_addresses(element.from , element.to);
 			self.state[vAddress].GCT += element.fee - element.fee * self.feesToCharity;
 			self.state[self.charityAddress].GCT += element.fee * self.feesToCharity;
 			self.state[element.from].GCT -= element.fee;
@@ -116,33 +116,19 @@ class GoodChain
 		// how ever they can download it as well
 	}
 	
-	// Adds a new transaction to the list of transactions
-	async new_transaction ({index, from, to, amount, fee, tickPrice, hash, sign})
+	// a quick check on some of the fields of the block
+	async pre_validate_block (block)
 	{
 		const self = this;
-		await self.validate_transaction({index, from, to, amount, fee, tickPrice, hash, sign});
-		self.transactions.push({
-			index, // only way to stop a signed transaction from being broadcasted again in future blocks
-			// this is the user transaction number. for example 10 means this transaction is the 10th transaction
-			// from the user. this is used to prevent a user from sending the same transaction twice and also
-			// a hacker to send an old signed transaction to the blockchain
-			// This number keep increasing each an address makes a transaction
-			from: self.hex(from),
-			to: self.hex(to),
-			amount,
-			fee, // for transfer, fee is amount of GCT user is paying. it is what it is, validator decide to mine it or not
-			// for programs fee is is max amount user will pay for the execution of the program
-			tickPrice, // only for programs, it is the price that user has considered for each tick,
-			sign, // the signature of the transaction
-			hash // hash of the transaction
-		});
-		// returns block number where this transaction will be included
-		return self.last_block().index + 1;
+		
+		for (let index = 0; index < block.transactions.length; index++) 
+		{
+			const element = block.transactions[index];
+			await self.validate_transaction(element);
+		}
 	}
 
-
-
-	async validate_block (block)
+	validate_block (block)
 	{
 		const self = this;
 		const block_without_hash = _.cloneDeep(block);
@@ -187,12 +173,41 @@ class GoodChain
 		{
 			throw new Error("Block sign is not valid");
 		}
-		
-		// check if transactions are valid
 	}
 
-	async validate_transaction (trans)
+	// Adds a new transaction to the list of transactions
+	async new_transaction ({index, from, to, amount, fee, tickPrice, hash, sign})
 	{
+		const self = this;
+		await self.validate_transaction({index, from, to, amount, fee, tickPrice, hash, sign});
+		self.transactions_pool.push({
+			index, // only way to stop a signed transaction from being broadcasted again in future blocks
+			// this is the user transaction number. for example 10 means this transaction is the 10th transaction
+			// from the user. this is used to prevent a user from sending the same transaction twice and also
+			// a hacker to send an old signed transaction to the blockchain
+			// This number keep increasing each an address makes a transaction
+			from: self.hex(from),
+			to: self.hex(to),
+			amount,
+			fee, // for transfer, fee is amount of GCT user is paying. it is what it is, validator decide to mine it or not
+			// for programs fee is is max amount user will pay for the execution of the program
+			tickPrice, // only for programs, it is the price that user has considered for each tick,
+			sign, // the signature of the transaction
+			hash // hash of the transaction
+		});
+		// returns block number where this transaction will be included
+		return self.last_block().index + 1;
+	}
+
+
+	async validate_transaction ({index, from, to, amount, fee, tickPrice, hash, sign})
+	{
+		const self = this;
+		self.init_addresses(from , to);
+		if (index != self.account_last_index(from) + 1)
+		{
+			throw new Error("Transaction index is not valid");
+		}
 		// Check if the transaction is valid
 		// check if the signature is valid
 		// check if the index value is valid, mean index value should be the same or lower than the last one
@@ -245,6 +260,7 @@ class GoodChain
 		return encrypted.toString("base64");
 	}
 
+	// Checks if the block is signed by the validator
 	checkBlockSign (block, sign, publicKey)
 	{
 		const self = this;
@@ -289,6 +305,16 @@ class GoodChain
 			fs.writeFileSync(join(path, "public_key.hex"), this.hex(keyPair.publicKey, "utf8", "hex"));
 		}
 		return keyPair;
+	}
+
+	async genesis_block ()
+	{
+		const self = this;
+		const genesis_block = {
+			index: 1,
+			previous_hash: "0000000000000000000000000000000000000000"
+		};
+		await self.new_block(genesis_block);
 	}
 
 	// initalize the node info
@@ -347,28 +373,19 @@ class GoodChain
 		await self.save_state();
 	}
 
-	async genesis_block ()
-	{
-		const self = this;
-		const genesis_block = {
-			index: 0,
-			previous_hash: "0000000000000000000000000000000000000000"
-		};
-		await self.new_block(genesis_block);
-	}
-
 	// initializes addresses with 0 GCT and MCT
 	init_addresses (...addresses)
 	{
 		const self = this;
 		for (let index = 0; index < addresses.length; index++) 
 		{
-			const element = addresses[index];
+			const element = self.hex(addresses[index]);
 			if (!self.state[element])
 			{
 				self.state[element] = {
 					GCT: 0,
-					MCT: 0
+					MCT: 0,
+					index: 0
 				};
 			}
 		}
@@ -383,6 +400,11 @@ class GoodChain
 	last_block ()
 	{
 		return this.chain.last();
+	}
+
+	account_last_index (account)
+	{
+		return this.state[this.hex(account)].index;
 	}
 
 	async save () 

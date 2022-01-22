@@ -27,7 +27,7 @@ const { dirname } = require("path");
 	// console.log(chain.chain);
 	// from and to can be in HEX or PEM format
 	const new_transaction = {
-		index: 0, // userPublicKey N transaction 
+		index: 1, // userPublicKey N transaction 
 		from: userPublicKey,
 		to: validatorPublicKey, // it is null for programs
 		amount: 1,
