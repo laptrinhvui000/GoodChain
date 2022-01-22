@@ -57,6 +57,9 @@ npm install GoodChain
 
 ## Usage
 
+```javascript
+const chain = await new GoodChain();
+```
 
 ## GoodChain's architecture
 

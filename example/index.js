@@ -21,9 +21,9 @@ const { inspect } = require("util");
 		privateKey: validatorPrivateKey
 	};
 
-	GoodChain.generateKeyPairs(__dirname);
+	// GoodChain.generateKeyPairs(__dirname);
 	// const chain = await new GoodChain();
-	// const chain = await new GoodChain({validator});
+	const chain = await new GoodChain({validator});
 	// console.log(chain.chain);
 	// from and to can be in HEX or PEM format
 	const new_transaction = {
