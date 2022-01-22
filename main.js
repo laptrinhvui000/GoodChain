@@ -59,7 +59,6 @@ class GoodChain
 			extra: "The intention of the donations is to help all the beings not only human kinds",
 			validator_address: self.validator.address // validator address in hex
 		};
-		block.validator_sign = self.signBlock(block), // encrypting by the validator privateKey
 		
 		await self.add_block(block);
 		return block;
@@ -75,6 +74,7 @@ class GoodChain
 		{
 			self.state_update(block);
 			block.state_hash ||= self.hash(self.state); // for when THIS validator mines a block
+			block.validator_sign ||= self.signBlock(block); // for when THIS validator mines a block
 			block.hash ||= self.hash(block); // for when THIS validator mines a block
 			await self.validate_block(block);
 			self.chain.push(block);
@@ -180,6 +180,14 @@ class GoodChain
 		{
 			throw new Error("Block state hash is not valid");
 		}
+
+		const block_without_hash_sign = _.cloneDeep(block_without_hash);
+		delete block_without_hash_sign.validator_sign;
+		if (!self.checkBlockSign(block_without_hash_sign, block.validator_sign, self.validator.publicKey))
+		{
+			throw new Error("Block sign is not valid");
+		}
+		
 		// check if transactions are valid
 	}
 
@@ -233,8 +241,19 @@ class GoodChain
 		const encrypted = crypto.privateEncrypt({
 			key: self.validator.privateKey,
 			padding: crypto.constants.RSA_NO_PADDING
-		}, Buffer.from(shaHash));
+		}, Buffer.from(shaHash, "utf8"));
 		return encrypted.toString("base64");
+	}
+
+	checkBlockSign (block, sign, publicKey)
+	{
+		const self = this;
+		const shaHash = self.hash(block);
+		const decrypted = crypto.publicDecrypt({
+			key: publicKey,
+			padding: crypto.constants.RSA_NO_PADDING
+		}, Buffer.from(sign , "base64"));
+		return decrypted.toString() == shaHash;
 	}
 
 	signTransaction (trx, privateKey) 
@@ -270,51 +289,6 @@ class GoodChain
 			fs.writeFileSync(join(path, "public_key.hex"), this.hex(keyPair.publicKey, "utf8", "hex"));
 		}
 		return keyPair;
-	}
-	
-	register_node (node)
-	{
-		// adds a new node to THIS node's list of nodes
-		this.nodes.push(node);
-	}
-
-	last_block ()
-	{
-		return this.chain.last();
-	}
-
-	async save () 
-	{
-		await this.save_state();
-		await this.save_chain();
-	}
-
-	async load () 
-	{
-		await this.load_state();
-		await this.load_chain();
-	}
-
-	async save_state ()
-	{
-		await this.stateDB.write();
-	}
-	
-	async load_state ()
-	{
-		await this.stateDB.read();
-		this.state = this.stateDB.data;
-	}
-
-	async save_chain ()
-	{
-		await this.chainDB.write();
-	}
-
-	async load_chain () 
-	{
-		await this.chainDB.read();
-		this.chain = this.chainDB.data;
 	}
 
 	// initalize the node info
@@ -398,6 +372,51 @@ class GoodChain
 				};
 			}
 		}
+	}
+
+	register_node (node)
+	{
+		// adds a new node to THIS node's list of nodes
+		this.nodes.push(node);
+	}
+
+	last_block ()
+	{
+		return this.chain.last();
+	}
+
+	async save () 
+	{
+		await this.save_state();
+		await this.save_chain();
+	}
+
+	async load () 
+	{
+		await this.load_state();
+		await this.load_chain();
+	}
+
+	async save_state ()
+	{
+		await this.stateDB.write();
+	}
+	
+	async load_state ()
+	{
+		await this.stateDB.read();
+		this.state = this.stateDB.data;
+	}
+
+	async save_chain ()
+	{
+		await this.chainDB.write();
+	}
+
+	async load_chain () 
+	{
+		await this.chainDB.read();
+		this.chain = this.chainDB.data;
 	}
 
 }
