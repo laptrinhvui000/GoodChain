@@ -5,7 +5,6 @@ const GoodChain = require("../main.js");
 const path = require ("path");
 const fs = require ("fs");
 const { inspect } = require("util");
-const { dirname } = require("path");
 
 
 
@@ -22,8 +21,9 @@ const { dirname } = require("path");
 		privateKey: validatorPrivateKey
 	};
 
-	const chain = await new GoodChain({validator});
-	// chain.generateKeyPairs(__dirname);
+	GoodChain.generateKeyPairs(__dirname);
+	// const chain = await new GoodChain();
+	// const chain = await new GoodChain({validator});
 	// console.log(chain.chain);
 	// from and to can be in HEX or PEM format
 	const new_transaction = {

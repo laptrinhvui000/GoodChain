@@ -186,8 +186,8 @@ class GoodChain
 			// from the user. this is used to prevent a user from sending the same transaction twice and also
 			// a hacker to send an old signed transaction to the blockchain
 			// This number keep increasing each an address makes a transaction
-			from: self.hex(from),
-			to: self.hex(to),
+			from: GoodChain.hex(from),
+			to: GoodChain.hex(to),
 			amount,
 			fee, // for transfer, fee is amount of GCT user is paying. it is what it is, validator decide to mine it or not
 			// for programs fee is is max amount user will pay for the execution of the program
@@ -236,7 +236,7 @@ class GoodChain
 		return hash(obj , {algorithm: "sha3-512"});
 	}
 
-	hex (string, from="utf8", to="hex")
+	static hex (string, from="utf8", to="hex")
 	{
 		if (string.startsWith("-----BEGIN") && from=="utf8" && to=="hex")
 		{
@@ -284,7 +284,7 @@ class GoodChain
 		return encrypted.toString("base64");
 	}
 
-	generateKeyPairs (path) 
+	static generateKeyPairs (path) 
 	{
 
 		const keyPair = crypto.generateKeyPairSync("rsa", {
@@ -302,7 +302,7 @@ class GoodChain
 		{
 			fs.writeFileSync(join(path, "public_key.pem"), keyPair.publicKey);
 			fs.writeFileSync(join(path, "private_key.pem"), keyPair.privateKey);
-			fs.writeFileSync(join(path, "public_key.hex"), this.hex(keyPair.publicKey, "utf8", "hex"));
+			fs.writeFileSync(join(path, "public_key.hex"), GoodChain.hex(keyPair.publicKey, "utf8", "hex"));
 		}
 		return keyPair;
 	}
@@ -333,7 +333,7 @@ class GoodChain
 		{
 			console.log("Generating keys for validator");
 			mkdirp.sync(self.keysPath);
-			keys = self.generateKeyPairs(self.keysPath);
+			keys = GoodChain.generateKeyPairs(self.keysPath);
 		}
 		else 
 		{
@@ -349,7 +349,7 @@ class GoodChain
 			publicKey: cValidator.publicKey || keys.publicKey,
 			privateKey: cValidator.privateKey || keys.privateKey,
 		};
-		validator.address = self.hex(validator.publicKey);
+		validator.address = GoodChain.hex(validator.publicKey);
 		return validator;
 	}
 
@@ -379,7 +379,7 @@ class GoodChain
 		const self = this;
 		for (let index = 0; index < addresses.length; index++) 
 		{
-			const element = self.hex(addresses[index]);
+			const element = GoodChain.hex(addresses[index]);
 			if (!self.state[element])
 			{
 				self.state[element] = {
@@ -404,7 +404,7 @@ class GoodChain
 
 	account_last_index (account)
 	{
-		return this.state[this.hex(account)].index;
+		return this.state[GoodChain.hex(account)].index;
 	}
 
 	async save () 

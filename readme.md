@@ -55,9 +55,8 @@ Then the node will choose the chain with the **highest trust point**.
 npm install GoodChain
 ```
 
-## TODO
-<!-- 
 ## Usage
+
 
 ## GoodChain's architecture
 
