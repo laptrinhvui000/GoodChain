@@ -176,12 +176,12 @@ class GoodChain
 	}
 
 	// Adds a new transaction to the list of transactions
-	async new_transaction ({index, from, to, amount, fee, tickPrice, hash, sign})
+	new_transaction ({index, from, to, amount, fee, tickPrice, hash, sign})
 	{
 		const self = this;
 		from = GoodChain.hex(from);
 		to = GoodChain.hex(to);
-		await self.validate_transaction({index, from, to, amount, fee, tickPrice, hash, sign});
+		self.validate_transaction({index, from, to, amount, fee, tickPrice, hash, sign});
 		self.transactions_pool.push({
 			index, // only way to stop a signed transaction from being broadcasted again in future blocks
 			// this is the user transaction number. for example 10 means this transaction is the 10th transaction
@@ -202,7 +202,7 @@ class GoodChain
 	}
 
 
-	async validate_transaction ({index, from, to, amount, fee, tickPrice, hash, sign})
+	validate_transaction ({index, from, to, amount, fee, tickPrice, hash, sign})
 	{
 		const self = this;
 		from = GoodChain.hex(from);
