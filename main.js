@@ -179,6 +179,8 @@ class GoodChain
 	async new_transaction ({index, from, to, amount, fee, tickPrice, hash, sign})
 	{
 		const self = this;
+		from = GoodChain.hex(from);
+		to = GoodChain.hex(to);
 		await self.validate_transaction({index, from, to, amount, fee, tickPrice, hash, sign});
 		self.transactions_pool.push({
 			index, // only way to stop a signed transaction from being broadcasted again in future blocks
@@ -186,8 +188,8 @@ class GoodChain
 			// from the user. this is used to prevent a user from sending the same transaction twice and also
 			// a hacker to send an old signed transaction to the blockchain
 			// This number keep increasing each an address makes a transaction
-			from: GoodChain.hex(from),
-			to: GoodChain.hex(to),
+			from,
+			to,
 			amount,
 			fee, // for transfer, fee is amount of GCT user is paying. it is what it is, validator decide to mine it or not
 			// for programs fee is is max amount user will pay for the execution of the program
@@ -203,13 +205,26 @@ class GoodChain
 	async validate_transaction ({index, from, to, amount, fee, tickPrice, hash, sign})
 	{
 		const self = this;
+		from = GoodChain.hex(from);
+		to = GoodChain.hex(to);
+		const trxWithoutHashAndSign = {
+			index,
+			from,
+			to,
+			amount,
+			fee,
+			tickPrice,
+		};
 		self.init_addresses(from , to);
 		if (index != self.account_last_index(from) + 1)
 		{
 			throw new Error("Transaction index is not valid");
 		}
+		if (!self.checkTransactionSign(trxWithoutHashAndSign, sign, GoodChain.hex(from,"hex","utf8")))
+		{
+			throw new Error("Transaction sign is not valid");
+		}
 		// Check if the transaction is valid
-		// check if the signature is valid
 		// check if the index value is valid, mean index value should be the same or lower than the last one
 	}
 
@@ -239,6 +254,10 @@ class GoodChain
 	static hex (string, from="utf8", to="hex")
 	{
 		if (string.startsWith("-----BEGIN") && from=="utf8" && to=="hex")
+		{
+			return Buffer.from(string, from).toString(to);
+		}
+		else if (from == "hex" && to == "utf8")
 		{
 			return Buffer.from(string, from).toString(to);
 		}
@@ -272,16 +291,30 @@ class GoodChain
 		return decrypted.toString() == shaHash;
 	}
 
+	// Sign a transaction using privateKey
 	signTransaction (trx, privateKey) 
 	{
 		const self = this;
+		trx.from = GoodChain.hex(trx.from);
+		trx.to = GoodChain.hex(trx.to);
 		const trxHash = self.hash(trx);
 
 		const encrypted = crypto.privateEncrypt({
 			key: privateKey,
 			padding: crypto.constants.RSA_NO_PADDING
-		}, Buffer.from(trxHash));
+		}, Buffer.from(trxHash , "utf8"));
 		return encrypted.toString("base64");
+	}
+
+	checkTransactionSign (trx, sign, publicKey)
+	{
+		const self = this;
+		const trxHash = self.hash(trx);
+		const decrypted = crypto.publicDecrypt({
+			key: publicKey,
+			padding: crypto.constants.RSA_NO_PADDING
+		}, Buffer.from(sign , "base64"));
+		return decrypted.toString() == trxHash;
 	}
 
 	static generateKeyPairs (path) 
