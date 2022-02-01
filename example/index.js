@@ -18,7 +18,7 @@ const { inspect } = require("util");
 
 	const validatorKeyPath = path.join(scriptPath, "./validator_keys/");
 	const validatorPublicKey = fs.readFileSync(path.join(validatorKeyPath, "public_key.pem"), "utf8");
-	const validatorPrivateKey = fs.readFileSync(path.join(validatorKeyPath, "public_key.pem"), "utf8");
+	const validatorPrivateKey = fs.readFileSync(path.join(validatorKeyPath, "private_key.pem"), "utf8");
 	const validator = {
 		publicKey: validatorPublicKey,
 		privateKey: validatorPrivateKey
