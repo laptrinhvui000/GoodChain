@@ -52,12 +52,13 @@ Then the node will choose the chain with the **highest trust point**.
 ## Installation
 
 ```bash
-npm install GoodChain
+npm install goodchain
 ```
 
 ## Usage
 
 ```javascript
+const GoodChain = require("goodchain");
 const chain = await new GoodChain();
 ```
 

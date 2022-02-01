@@ -10,12 +10,15 @@ const { inspect } = require("util");
 
 (async () => 
 {
-	const userKeysPath = path.join(path.dirname(process.argv[1]), "./keys/");
+	const scriptPath = path.dirname(process.argv[1]);
+
+	const userKeysPath = path.join(scriptPath, "./my_keys/");
 	const userPublicKey = fs.readFileSync(path.join(userKeysPath, "public_key.pem"), "utf8");
 	const userPrivateKey = fs.readFileSync(path.join(userKeysPath, "private_key.pem"), "utf8");
 
-	const validatorPublicKey = fs.readFileSync("keys/public_key.pem", "utf8");
-	const validatorPrivateKey = fs.readFileSync("keys/private_key.pem", "utf8");
+	const validatorKeyPath = path.join(scriptPath, "./validator_keys/");
+	const validatorPublicKey = fs.readFileSync(path.join(validatorKeyPath, "public_key.pem"), "utf8");
+	const validatorPrivateKey = fs.readFileSync(path.join(validatorKeyPath, "public_key.pem"), "utf8");
 	const validator = {
 		publicKey: validatorPublicKey,
 		privateKey: validatorPrivateKey
