@@ -6,6 +6,7 @@ const lowdb = import( "lowdb" );
 const publicIp = import( "public-ip" );
 const ip = require( "ip" );
 const _ = require( "lodash" );
+const mkdirp = require( "mkdirp" );
 
 class GoodChain
 {
@@ -330,6 +331,7 @@ class GoodChain
 		} );
 		if ( path )
 		{
+			mkdirp.sync( path );
 			fs.writeFileSync( join( path, "public_key.pem" ), keyPair.publicKey );
 			fs.writeFileSync( join( path, "private_key.pem" ), keyPair.privateKey );
 			fs.writeFileSync( join( path, "public_key.hex" ), GoodChain.hex( keyPair.publicKey, "utf8", "hex" ) );
