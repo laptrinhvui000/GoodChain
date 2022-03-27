@@ -14,30 +14,28 @@ module.exports = {
 	},
 	"rules": {
 		"no-trailing-spaces": "error",
-		"linebreak-style": ["error","unix"],
-		"quotes": [	"error",	"double"	],
-		"semi": [ "error","always"	],
-		"one-var": ["error",	"never"	],
-		"brace-style": [	"error",	"allman",
-			{
-				"allowSingleLine": true
-			}
-		],
-		"space-before-blocks": ["warn"],
-		"func-call-spacing": ["error", "never"],
-		"space-before-function-paren": ["error", "always"],
-		"space-in-parens": ["error", "always"],
-		"keyword-spacing": ["error"],
-		"function-paren-newline": [ "warn"	],
+		"linebreak-style": [ "error", "unix" ],
+		"quotes": [ "error",	"double" ],
+		"semi": [ "error", "always" ],
+		"one-var": [ "error",	"never" ],
+		"brace-style": [ "error",	"allman", {	"allowSingleLine": true	} ],
+		"space-before-blocks": [ "warn" ],
+		"func-call-spacing": [ "error", "never" ],
+		"space-before-function-paren": [ "error", "always" ],
+		"space-in-parens": [ "error", "always" ],
+		"keyword-spacing": [ "error" ],
+		"comma-spacing": [ "error" ],
+		"comma-style": [ "error" ],
+		"array-bracket-spacing": [ "error", "always" ],
+		"no-multi-spaces": [ "error" ],
+		"operator-linebreak": [ "error", "after" ],
+		"function-paren-newline": [ "warn" ],
 		// "arrow-parens": [
 		// 	"error",
 		// 	"always"
 		// ],
-		"arrow-body-style": [
-			"error",
-			"always"
-		],
-		"no-template-curly-in-string": ["error"],
+		"arrow-body-style": [ "error", "always" ],
+		"no-template-curly-in-string": [ "error" ],
 		"prefer-const": [
 			"error",
 			{
@@ -45,7 +43,7 @@ module.exports = {
 				"ignoreReadBeforeAssign": false
 			}
 		],
-		"no-new-object": ["error"],
+		"no-new-object": [ "error" ],
 		"no-extra-parens": [
 			"error",
 			"all",
@@ -53,20 +51,20 @@ module.exports = {
 				"conditionalAssign": false
 			}
 		],
-		"no-empty-function": ["error"],
+		"no-empty-function": [ "error" ],
 		"no-empty": [
 			"warn",
 			{
 				"allowEmptyCatch": true
 			}
 		],
-		"no-eq-null": ["error"],
-		"no-extra-bind": [ "error"	],
-		"no-self-compare": [ "error"	],
-		"no-useless-call": [ "error"	],
-		"no-undefined": [ "error"	],
-		"no-undef": [ "warn"	],
-		"no-array-constructor": [ "error"	],
+		"no-eq-null": [ "error" ],
+		"no-extra-bind": [ "error" ],
+		"no-self-compare": [ "error" ],
+		"no-useless-call": [ "error" ],
+		"no-undefined": [ "error" ],
+		"no-undef": [ "warn" ],
+		"no-array-constructor": [ "error" ],
 		"prefer-destructuring": [
 			"error", {
 				"VariableDeclarator": {
@@ -82,13 +80,13 @@ module.exports = {
 				"enforceForRenamedProperties": false
 			}
 		],
-		"object-shorthand": [ "warn"	],
-		"prefer-spread": [ "warn"	],
-		"prefer-template": [ "warn"	],
-		"no-loop-func": [ "warn"	],
-		"prefer-rest-params": [ "warn"	],
-		"no-new-func": [ "warn"	],
-		"no-unneeded-ternary": [ "warn"	],
+		"object-shorthand": [ "warn" ],
+		"prefer-spread": [ "warn" ],
+		"prefer-template": [ "warn" ],
+		"no-loop-func": [ "warn" ],
+		"prefer-rest-params": [ "warn" ],
+		"no-new-func": [ "warn" ],
+		"no-unneeded-ternary": [ "warn" ],
 		"no-process-exit": "off",
 		"require-await": "warn",
 		"indent": [

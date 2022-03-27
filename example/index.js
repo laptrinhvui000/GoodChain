@@ -61,7 +61,7 @@ async function full ()
 		privateKey: validatorPrivateKey
 	};
 
-	const chain = await new GoodChain( { state: myState, chain: myChain, nodes: myNodes, validator } );
+	const chain = await new GoodChain( { validator, dbPath:"./", state: myState, chain: myChain, nodes: myNodes } );
 	// console.log(chain.chain);
 
 	const new_transaction = {
